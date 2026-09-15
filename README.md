@@ -31,9 +31,9 @@ menu entirely, or left alone.
 cannot chop, undergrowth, the farming patch, ents, and spirit animals. Each has its own name list
 under Name lists, so anything the defaults miss can be added without a code change.
 
-Trees outside the vale are left alone. The area check is a list of map region IDs, not a global
-woodcutting override. Debug mode logs the regions you have loaded so the list can be corrected by
-walking the place.
+Trees outside the vale are left alone. The vale is identified by a hardcoded list of map region
+IDs, not a global woodcutting override. Debug mode logs the regions you have loaded if you want to
+confirm the coverage.
 
 ## Building
 
@@ -66,9 +66,8 @@ NPCs are not in the scene graph and cannot be removed. Ents and spirits are hidd
 draw them through a `Hooks.RenderableDrawListener`, the same mechanism core Entity Hider uses. A
 renderable that is never drawn has no click box, so hidden creatures cannot be clicked either.
 
-Every name list accepts object or NPC IDs as well as names. The vale reuses names across objects
-that do very different jobs - the `Logs` you take an axe from share a name with two scenery piles -
-so an ID is the way to hide one without the other.
+Every name list is matched on object or NPC name only, case-insensitively. Debug mode logs the name
+of everything the plugin sees, so anything the defaults miss can be found and added to a list.
 
 `Spirit offerings` has no actions but is the object you use logs on. It is not scenery, and nothing
 should be added to a list that would hide it.

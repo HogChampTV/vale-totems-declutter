@@ -66,8 +66,11 @@ public class ValeTotemsDeclutterPlugin extends Plugin
 	// Only used to keep the debug log from repeating itself every scene load.
 	private final Set<String> loggedNames = new HashSet<>();
 
-	// Parsed out of config so we are not splitting a string on every menu entry.
-	private final Set<Integer> valeRegions = new HashSet<>();
+	// The map regions that make up Auburnvale, collected by walking every totem site. Hardcoded
+	// rather than taken from config because the plugin hub does not allow user-supplied IDs.
+	private static final Set<Integer> VALE_REGIONS = new HashSet<>(Arrays.asList(
+		5170, 5171, 5172, 5173, 5426, 5427, 5428, 5429, 5682, 5683, 5684, 5685, 5939, 5940, 5941));
+
 	private final NameList scenery = new NameList();
 	private final NameList clutter = new NameList();
 	private final NameList admire = new NameList();
@@ -88,7 +91,6 @@ public class ValeTotemsDeclutterPlugin extends Plugin
 	@Override
 	protected void startUp()
 	{
-		parseRegions();
 		parseNames();
 		hooks.registerRenderableDrawListener(drawListener);
 		clientThread.invoke(this::sweepScene);
@@ -121,7 +123,6 @@ public class ValeTotemsDeclutterPlugin extends Plugin
 		}
 
 		loggedNames.clear();
-		parseRegions();
 		parseNames();
 
 		// Trees already pulled out of the scene only come back with a reload, so take the hit
@@ -410,10 +411,10 @@ public class ValeTotemsDeclutterPlugin extends Plugin
 		if (!isTree(composition))
 		{
 			String lower = name.toLowerCase(Locale.ROOT);
-			boolean wanted = (config.hideScenery() && scenery.matches(lower, objectId))
-				|| (config.hideClutter() && clutter.matches(lower, objectId))
-				|| (config.hideAdmire() && admire.matches(lower, objectId))
-				|| (config.hideOfferings() && offerings.matches(lower, objectId));
+			boolean wanted = (config.hideScenery() && scenery.matches(lower))
+				|| (config.hideClutter() && clutter.matches(lower))
+				|| (config.hideAdmire() && admire.matches(lower))
+				|| (config.hideOfferings() && offerings.matches(lower));
 
 			return wanted && TreeType.match(name) != target;
 		}
@@ -545,9 +546,7 @@ public class ValeTotemsDeclutterPlugin extends Plugin
 
 	private boolean inTheVale(WorldPoint location)
 	{
-		// An empty list is treated as "everywhere" rather than "nowhere" - a typo in the config
-		// should not silently switch the whole plugin off.
-		return location != null && (valeRegions.isEmpty() || valeRegions.contains(location.getRegionID()));
+		return location != null && VALE_REGIONS.contains(location.getRegionID());
 	}
 
 	/**
@@ -575,12 +574,12 @@ public class ValeTotemsDeclutterPlugin extends Plugin
 
 		String lower = Text.removeTags(name).toLowerCase(Locale.ROOT);
 
-		if (config.hideEnts() && ents.matches(lower, npc.getId()))
+		if (config.hideEnts() && ents.matches(lower))
 		{
 			return false;
 		}
 
-		return !(config.hideSpirits() && spirits.matches(lower, npc.getId()));
+		return !(config.hideSpirits() && spirits.matches(lower));
 	}
 
 	@Subscribe
@@ -611,77 +610,34 @@ public class ValeTotemsDeclutterPlugin extends Plugin
 	}
 
 	/**
-	 * A list of things to hide, written as names or as IDs.
-	 *
-	 * IDs matter because the vale reuses names across objects that do very different jobs - the
-	 * Logs you take an axe from share a name with two scenery piles, and the Rocks you climb share
-	 * one with decorative rubble. A name hides the lot; an ID hides exactly one.
+	 * A list of object or NPC names to hide, matched case-insensitively.
 	 */
 	private static final class NameList
 	{
 		private final Set<String> names = new HashSet<>();
-		private final Set<Integer> ids = new HashSet<>();
 
 		void parse(String csv)
 		{
 			names.clear();
-			ids.clear();
 
 			for (String part : csv.split(","))
 			{
 				String trimmed = part.trim();
-				if (trimmed.isEmpty())
-				{
-					continue;
-				}
-
-				try
-				{
-					ids.add(Integer.parseInt(trimmed));
-				}
-				catch (NumberFormatException notAnId)
+				if (!trimmed.isEmpty())
 				{
 					names.add(trimmed.toLowerCase(Locale.ROOT));
 				}
 			}
 		}
 
-		boolean matches(String lowerName, int id)
+		boolean matches(String lowerName)
 		{
-			return ids.contains(id) || names.contains(lowerName);
-		}
-
-		boolean isEmpty()
-		{
-			return names.isEmpty() && ids.isEmpty();
-		}
-	}
-
-	private void parseRegions()
-	{
-		valeRegions.clear();
-
-		for (String part : config.regionIds().split(","))
-		{
-			String trimmed = part.trim();
-			if (trimmed.isEmpty())
-			{
-				continue;
-			}
-
-			try
-			{
-				valeRegions.add(Integer.parseInt(trimmed));
-			}
-			catch (NumberFormatException e)
-			{
-				log.warn("Vale Totems Declutter: ignoring bad region id '{}'", trimmed);
-			}
+			return names.contains(lowerName);
 		}
 	}
 
 	/**
-	 * Prints what is loaded so the region list can be filled in by walking the place.
+	 * Prints the regions currently loaded, so area matching can be checked when debugging.
 	 */
 	private void logRegions()
 	{

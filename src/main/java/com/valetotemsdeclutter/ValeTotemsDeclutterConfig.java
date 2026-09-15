@@ -177,24 +177,12 @@ public interface ValeTotemsDeclutterConfig extends Config
 		return true;
 	}
 
-	@ConfigItem(
-		keyName = "regionIds",
-		name = "Regions",
-		description = "The map regions counted as Auburnvale, collected by walking every totem site. Only worth changing if part of the vale is being missed.",
-		position = 22,
-		section = areaSection
-	)
-	default String regionIds()
-	{
-		return "5170,5171,5172,5173,5426,5427,5428,5429,5682,5683,5684,5685,5939,5940,5941";
-	}
-
 	// ---------------------------------------------------------------- lists
 
 	@ConfigItem(
 		keyName = "sceneryNames",
 		name = "Scenery trees",
-		description = "Names or object IDs hidden by the Scenery trees option.",
+		description = "Names hidden by the Scenery trees option.",
 		position = 31,
 		section = listSection
 	)
@@ -206,7 +194,7 @@ public interface ValeTotemsDeclutterConfig extends Config
 	@ConfigItem(
 		keyName = "clutterNames",
 		name = "Undergrowth",
-		description = "Names or object IDs. Use an ID when a name would also catch something you need, like the Logs you take an axe from.",
+		description = "Names hidden by the Undergrowth option.",
 		position = 32,
 		section = listSection
 	)
@@ -218,7 +206,7 @@ public interface ValeTotemsDeclutterConfig extends Config
 	@ConfigItem(
 		keyName = "admireNames",
 		name = "Admire spots",
-		description = "Names or object IDs hidden by the Admire spots option.",
+		description = "Names hidden by the Admire spots option.",
 		position = 33,
 		section = listSection
 	)
@@ -230,7 +218,7 @@ public interface ValeTotemsDeclutterConfig extends Config
 	@ConfigItem(
 		keyName = "offeringsNames",
 		name = "Spirit offerings",
-		description = "Names or object IDs hidden by the Spirit offerings option.",
+		description = "Names hidden by the Spirit offerings option.",
 		position = 34,
 		section = listSection
 	)
@@ -242,7 +230,7 @@ public interface ValeTotemsDeclutterConfig extends Config
 	@ConfigItem(
 		keyName = "entNames",
 		name = "Ents",
-		description = "Names or NPC IDs hidden by the Ents option.",
+		description = "Names hidden by the Ents option.",
 		position = 35,
 		section = listSection
 	)
@@ -254,7 +242,7 @@ public interface ValeTotemsDeclutterConfig extends Config
 	@ConfigItem(
 		keyName = "spiritNames",
 		name = "Spirit animals",
-		description = "Names or NPC IDs hidden by the Spirit animals option.",
+		description = "Names hidden by the Spirit animals option.",
 		position = 36,
 		section = listSection
 	)
