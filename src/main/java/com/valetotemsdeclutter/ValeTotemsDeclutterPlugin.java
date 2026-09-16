@@ -39,7 +39,7 @@ import net.runelite.client.util.Text;
 @Slf4j
 @PluginDescriptor(
 	name = "Vale Totems Declutter",
-	description = "Pick the tree you are chopping for Vale Totems and hide the rest of the vale out of your way",
+	description = "For Vale Totems, pick the tree you are chopping and hide the rest of the vale out of your way",
 	tags = {"vale", "totems", "auburnvale", "varlamore", "fletching", "woodcutting", "declutter", "hide", "entity", "tree"}
 )
 public class ValeTotemsDeclutterPlugin extends Plugin
