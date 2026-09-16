@@ -87,9 +87,10 @@ renderable that is never drawn has no click box, so hidden creatures cannot be c
 Every name list is matched on object or NPC name only, case-insensitively. Debug mode logs the name
 of everything the plugin sees, so anything the defaults miss can be found and added to a list.
 
-Forestry event trees are spared. The Rising Roots event sprouts `Anima-infused roots` in the
-woodcutting area, and they are choppable like any other tree, so without an exception they would be
-hidden or deprioritised along with the species you are not using. They are always left clickable.
+Forestry event trees are spared. The Rising Roots event sprouts `Tree roots` and `Anima-infused
+Tree roots` in the woodcutting area, and they are choppable like any other tree, so without an
+exception they would be hidden or deprioritised along with the species you are not using. Anything
+with "root" in its name is always left clickable, whatever tree is selected.
 
 `Spirit offerings` has no actions but is the object you use logs on. It is not scenery, and nothing
 should be added to a list that would hide it.

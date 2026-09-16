@@ -71,13 +71,6 @@ public class ValeTotemsDeclutterPlugin extends Plugin
 	private static final Set<Integer> VALE_REGIONS = new HashSet<>(Arrays.asList(
 		5170, 5171, 5172, 5173, 5426, 5427, 5428, 5429, 5682, 5683, 5684, 5685, 5939, 5940, 5941));
 
-	// Forestry event objects that are choppable but are a bonus, not clutter - the Rising Roots
-	// event sprouts Anima-infused roots right in the woodcutting area. They carry a Chop action so
-	// isTree treats them as a tree, which would otherwise hide or deprioritise them along with the
-	// species you are not using. Always spared, whatever tree is selected.
-	private static final Set<String> ALWAYS_KEEP_NAMES = new HashSet<>(Arrays.asList(
-		"anima-infused roots"));
-
 	private final NameList scenery = new NameList();
 	private final NameList clutter = new NameList();
 	private final NameList admire = new NameList();
@@ -463,12 +456,15 @@ public class ValeTotemsDeclutterPlugin extends Plugin
 	}
 
 	/**
-	 * True for objects that stay clickable no matter what tree is selected - Forestry event trees
-	 * that spawn in the middle of the woodcutting area and are always worth interacting with.
+	 * True for objects that stay clickable no matter what tree is selected. The Forestry Rising
+	 * Roots event sprouts Tree roots, Anima-infused Tree roots and decorative Roots in the middle of
+	 * the woodcutting area - the choppable ones carry a Chop action so isTree treats them as a tree.
+	 * Matching on the word "root" spares every part of the event, including depleted states, and no
+	 * vale tree or scenery is named with it.
 	 */
 	private static boolean alwaysKeep(String name)
 	{
-		return name != null && ALWAYS_KEEP_NAMES.contains(name.toLowerCase(Locale.ROOT));
+		return name != null && name.toLowerCase(Locale.ROOT).contains("root");
 	}
 
 	/**

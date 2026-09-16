@@ -200,7 +200,7 @@ public interface ValeTotemsDeclutterConfig extends Config
 	)
 	default String clutterNames()
 	{
-		return "Plant,Fern,Bush,Berry bush,Bullrushes,Fungi,Mushrooms,Roots,Flowers,Rockslide,Rock,Log pile,Hollow log";
+		return "Plant,Fern,Bush,Berry bush,Bullrushes,Fungi,Mushrooms,Flowers,Rockslide,Rock,Log pile,Hollow log";
 	}
 
 	@ConfigItem(
