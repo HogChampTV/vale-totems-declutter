@@ -39,7 +39,7 @@ import net.runelite.client.util.Text;
 @Slf4j
 @PluginDescriptor(
 	name = "Vale Totems Declutter",
-	description = "Pick the tree you are chopping for Vale Totems and clear the rest of the vale out of your way",
+	description = "Pick the tree you are chopping for Vale Totems and hide the rest of the vale out of your way",
 	tags = {"vale", "totems", "auburnvale", "varlamore", "fletching", "woodcutting", "declutter", "hide", "entity", "tree"}
 )
 public class ValeTotemsDeclutterPlugin extends Plugin
@@ -70,6 +70,13 @@ public class ValeTotemsDeclutterPlugin extends Plugin
 	// rather than taken from config because the plugin hub does not allow user-supplied IDs.
 	private static final Set<Integer> VALE_REGIONS = new HashSet<>(Arrays.asList(
 		5170, 5171, 5172, 5173, 5426, 5427, 5428, 5429, 5682, 5683, 5684, 5685, 5939, 5940, 5941));
+
+	// Forestry event objects that are choppable but are a bonus, not clutter - the Rising Roots
+	// event sprouts Anima-infused roots right in the woodcutting area. They carry a Chop action so
+	// isTree treats them as a tree, which would otherwise hide or deprioritise them along with the
+	// species you are not using. Always spared, whatever tree is selected.
+	private static final Set<String> ALWAYS_KEEP_NAMES = new HashSet<>(Arrays.asList(
+		"anima-infused roots"));
 
 	private final NameList scenery = new NameList();
 	private final NameList clutter = new NameList();
@@ -181,6 +188,12 @@ public class ValeTotemsDeclutterPlugin extends Plugin
 
 		ObjectComposition composition = definition(entry.getIdentifier());
 		if (!isTree(composition))
+		{
+			return;
+		}
+
+		// Forestry event trees are a bonus you want to click, never clutter.
+		if (alwaysKeep(composition.getName()))
 		{
 			return;
 		}
@@ -400,6 +413,12 @@ public class ValeTotemsDeclutterPlugin extends Plugin
 
 		String name = Text.removeTags(composition.getName());
 
+		// Forestry event trees (Anima-infused roots) are choppable but must never be swept up.
+		if (alwaysKeep(name))
+		{
+			return false;
+		}
+
 		// The farming patch is opt-in. Its tree is choppable like any other, so without this it
 		// would get swept up with the rest and you would lose sight of your own crop.
 		if (isFarmingPatch(composition))
@@ -441,6 +460,15 @@ public class ValeTotemsDeclutterPlugin extends Plugin
 	private boolean isFarmingPatch(ObjectComposition composition)
 	{
 		return hasAnyAction(composition, "check-health", "clear", "guide", "rake", "prune", "cure-plant");
+	}
+
+	/**
+	 * True for objects that stay clickable no matter what tree is selected - Forestry event trees
+	 * that spawn in the middle of the woodcutting area and are always worth interacting with.
+	 */
+	private static boolean alwaysKeep(String name)
+	{
+		return name != null && ALWAYS_KEEP_NAMES.contains(name.toLowerCase(Locale.ROOT));
 	}
 
 	/**

@@ -1,8 +1,8 @@
 # Vale Totems Declutter
 
-A RuneLite plugin for Vale Totems.
+A RuneLite plugin for the Vale Totems activity in Auburnvale (Varlamore).
 
-Pick the tree you are cutting. Every other tree in the vale stops being a left-click target, so
+Pick the tree you are chopping. Every other tree in the vale stops being a left-click target, so
 running a totem route no longer means chopping a maple you did not want because it happened to be
 in front of the willow you did.
 
@@ -22,18 +22,36 @@ The Hide options in the plugin panel, each toggle independent:
 
 ## What it does
 
-Pick the tree you are using. Then two independent things happen to everything else.
+Pick the tree you are chopping. Then two independent things happen to everything else.
 
 **Menus** — trees you are not using get their chop option pushed below "Walk here", removed from the
 menu entirely, or left alone.
 
 **Hiding** — separate toggles take things out of view altogether: other trees, scenery trees you
-cannot chop, undergrowth, the farming patch, ents, and spirit animals. Each has its own name list
-under Name lists, so anything the defaults miss can be added without a code change.
+cannot chop, undergrowth, admire spots, spirit offerings, the farming patch, ents, and spirit
+animals. Each has its own name list under Name lists, so anything the defaults miss can be added
+without a code change.
 
 Trees outside the vale are left alone. The vale is identified by a hardcoded list of map region
 IDs, not a global woodcutting override. Debug mode logs the regions you have loaded if you want to
 confirm the coverage.
+
+A few trees right on the edge of Auburnvale can still be affected. With the GPU plugin's expanded
+map loading the client draws well past the normal view, and whether something counts as being in
+the vale is decided by its map region — so a tree sitting in a border region of the vale may be
+hidden or deprioritised even though it looks like it is just outside.
+
+## Using it
+
+1. Install **Vale Totems Declutter** from the Plugin Hub and open its settings.
+2. Set **Tree in use** to the tree you are chopping (or **Not chopping** if you brought your own
+   logs, which makes every tree clutter).
+3. Choose what happens to the other trees under **Trees you are not using** — "Walk here first"
+   deprioritises their chop option, "Remove chop option" strips it, "Leave alone" does nothing.
+4. Flip on any of the **Hide** toggles for the things you want gone entirely.
+
+Everything is scoped to Auburnvale by default; turn off **Auburnvale only** if you want it to apply
+everywhere.
 
 ## Building
 
@@ -68,6 +86,10 @@ renderable that is never drawn has no click box, so hidden creatures cannot be c
 
 Every name list is matched on object or NPC name only, case-insensitively. Debug mode logs the name
 of everything the plugin sees, so anything the defaults miss can be found and added to a list.
+
+Forestry event trees are spared. The Rising Roots event sprouts `Anima-infused roots` in the
+woodcutting area, and they are choppable like any other tree, so without an exception they would be
+hidden or deprioritised along with the species you are not using. They are always left clickable.
 
 `Spirit offerings` has no actions but is the object you use logs on. It is not scenery, and nothing
 should be added to a list that would hide it.
